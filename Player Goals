@@ -1,2 +1,3 @@
 x=1
 print(x)
+data= pd.read_csv('EPL_20_21.csv')
