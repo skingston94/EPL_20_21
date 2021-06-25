@@ -57,7 +57,7 @@ plt.show()
 #Now I want to find out what odds these 7 players should be for a yellow card in each match
 ##I now have each of the players minutes, which I will create as a list below
 player_mins= [3330, 3047, 2531, 2428, 2781, 3420, 2287]
-#I want to tidy this up so I can view the yellows and minutes altogether
+#I want to tidy this up so I can view the yellows and minutes altogether. Here I am using Dictionary on the lists
 dict1= {'players_yellows': players_yellows, 'yellows': yellows, 'player_mins':player_mins}
 df= pd.DataFrame(dict1)
 df
@@ -69,18 +69,15 @@ print('yellows:' + str(yellows))
 minutes_p_yellow= list(map(truediv, player_mins, yellows))
 print(minutes_p_yellow)
 
-#Now I want to show this info on a line plot
-#Visually, this would be best
-plt.plot(players_yellows, minutes_p_yellow)
-plt.xlabel('Players')
-plt.ylabel('Mins Per Yellow')
-plt.title('Highest amount of yellows per minute- EPL 20/21')
-plt.show()
+#Now I want to find the price we would make each player to receive a yellow card
+#I want to show this info on a line plot
+#Visually, this would be best as it shows a stark difference between the top vs bottom players
 #This shows that even though Hojbjerg and Gallagher received the same amount of yellows, their price should be much different
 #Gallagher received a yellow card once every 230 minutes, vs 1 in every 380 mins for Hojbjerg
 #If we simply divide these mins per yellow by 90(minutes in a football match) we get each players price in decimal form
 #Example, Gallagher= 230.09/90 is 2.56, meaning he is expected to get 1 yellow every 2.56 matches
-#I will now use a for loop to show this, and create a scatter plot to show the difference between the players prices
+#Thus, his price is 2.56, meaning if you place €1 on him to be booked, you would get back €2.56
+#I will now use a for loop to show this, and create the line plot to show the difference between the players prices
 prices=[minutes/90 for minutes in minutes_p_yellow]
 print(prices)
 fig, ax= plt.subplots()
