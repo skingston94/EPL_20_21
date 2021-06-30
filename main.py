@@ -17,9 +17,11 @@ if __name__ == '__main__':
 #Importing pandas
 import pandas as pd
 #Naming the data of the file I have downloaded, which is Premier League players data from the season 2020/2021.
+#Dataset found on Kaggle- https://www.kaggle.com/atasaygin/premier-league-player-analysis
 data= pd.read_csv('EPL_20_21.csv')
-#Printing this dataset- Dataset found on Kaggle- https://www.kaggle.com/atasaygin/premier-league-player-analysis
-
+#Cleaning the data below to remove all players who did not start or play any matches
+cleaned_data=data.drop_duplicates(subset=['Matches', 'Starts'])
+print(cleaned_data)
 
 #The below are the imports needed for this project
 #I have downloaded matplotlib, pandas, numpy and seaborn from File-Settings-Python Interpreter
@@ -28,7 +30,7 @@ import seaborn as sns
 import numpy as np
 
 #Example to look at data in first 7 rows- Test to make sure data is running correctly
-Top10 = pd.read_csv('EPL_20_21.csv', nrows=20, header=None)
+Top7 = pd.read_csv('EPL_20_21.csv', nrows=7, header=None)
 #Sorting players by total number of yellow cards
 print(data.sort_values(['Yellow_Cards', 'Name'], ascending=[False, False]))
 #After trial and error, I've sorted the top 7 players to get most yellow cards (anyone with 9+).
@@ -86,3 +88,39 @@ plt.xlabel('Players')
 plt.ylabel('Yellow Card Price')
 plt.title('Price per Player for Yellow Card- EPL 20/21')
 plt.show()
+
+
+#Next, I want to look at the penalty takers from each team to find out what players are most likely to score from a penalty
+#Here, I will find all players who have taken over 2 penalties, and find their conversion rate
+#I will do this by creating lists for Penalty_Attempted and Penalty_Goals
+#First, I will find the top 15 players who have attempted penalties
+penalty_20=data.nlargest(15, 'Penalty_Attempted') [['Name', 'Penalty_Attempted', 'Penalty_Goals']]
+
+#I will now use indexing to make sure I can see the relevant column for Penalty_Attempted
+penalty20=penalty_20.set_index('Penalty_Attempted')
+print(penalty20)
+players_penalty_a= ['Fernandes', 'Jorginho', 'Vardy', 'Salah', 'Kane', 'Sigurdsson', 'El Ghazi', 'Wilson', 'Ward-Prowse', 'Maupay', 'Gros', 'Pereira', 'De Bruyne', 'Lacazette', 'Neves']
+pens_a= [10, 9, 9, 6, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3]
+
+
+#I will now use index again to find these players penalty goals
+penaltygoals= penalty_20.set_index('Penalty_Goals')
+penaltygoals=[9,7,8,6,4,3,4,4,3,3,3,4,2,3,3]
+print(penaltygoals)
+plt.bar(x=players_penalty_a, y=pens_a, penaltygoals]
+plt.xlabel('Players')
+plt.ylabel('Penalties Attempted/Scored')
+plt.title= ('Players to have taken most penalties 20/21')
+plt.show()
+
+print('penaltygoals:' + str(penaltygoals))
+print('pens_a:' + str(pens_a))
+conversion= list(map(truediv, penaltygoals, pens_a))
+print(conversion)
+#Now I will calculate each players price to score a penalty, based off their record this season
+#This will be printed in decimal form, simply by dividing 1 by their conversion rate
+#Example, Bruno Fernandes scored 9/10 penalties, a conversion rate of 0.9 or 90%
+#1/0.9 equals 1.11, which is a fraction price of 1/9
+#Using a for loop, See below all prices for relevant penalty takers, in list penprice
+penprice=[1/scored for scored in conversion]
+print(penprice)
