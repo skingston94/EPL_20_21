@@ -19,10 +19,14 @@ import pandas as pd
 #Naming the data of the file I have downloaded, which is Premier League players data from the season 2020/2021.
 #Dataset found on Kaggle- https://www.kaggle.com/atasaygin/premier-league-player-analysis
 data= pd.read_csv('EPL_20_21.csv')
+#I have also downloaded a dataset with American players, and called it a_data below
+#I will merge the two datasets below
 a_data= pd.read_csv('all_players.csv')
 print(data.shape, a_data.shape)
 concat_data=pd.concat([data, a_data])
 print(concat_data)
+#I won't be using the American players in this project, but I wanted to show I know how to merge datasets
+
 #Cleaning the data below to remove all players who did not start or play any matches
 cleaned_data=data.drop_duplicates(subset=['Matches', 'Starts'])
 print(cleaned_data)
