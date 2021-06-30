@@ -19,6 +19,10 @@ import pandas as pd
 #Naming the data of the file I have downloaded, which is Premier League players data from the season 2020/2021.
 #Dataset found on Kaggle- https://www.kaggle.com/atasaygin/premier-league-player-analysis
 data= pd.read_csv('EPL_20_21.csv')
+a_data= pd.read_csv('all_players.csv')
+print(data.shape, a_data.shape)
+concat_data=pd.concat([data, a_data])
+print(concat_data)
 #Cleaning the data below to remove all players who did not start or play any matches
 cleaned_data=data.drop_duplicates(subset=['Matches', 'Starts'])
 print(cleaned_data)
@@ -57,7 +61,9 @@ plt.show()
 
 
 #Now I want to find out what odds these 7 players should be for a yellow card in each match
-##I now have each of the players minutes, which I will create as a list below
+##Through the index function below, I now have each of the players minutes, which I will create as a list below
+pmins= data_frame.set_index('Mins')
+print(pmins)
 player_mins= [3330, 3047, 2531, 2428, 2781, 3420, 2287]
 #I want to tidy this up so I can view the yellows and minutes altogether. Here I am using Dictionary on the lists
 dict1= {'players_yellows': players_yellows, 'yellows': yellows, 'player_mins':player_mins}
@@ -102,11 +108,16 @@ print(penalty20)
 players_penalty_a= ['Fernandes', 'Jorginho', 'Vardy', 'Salah', 'Kane', 'Sigurdsson', 'El Ghazi', 'Wilson', 'Ward-Prowse', 'Maupay', 'Gros', 'Pereira', 'De Bruyne', 'Lacazette', 'Neves']
 pens_a= [10, 9, 9, 6, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3]
 
+#I want to look at the top 12 players below, who have taken 4+ penalties
+#I will do this using iloc, to remove any players who have taken less than 4
+#Using :11 will show the top 12 players
+penalty_20.iloc[:11]
 
 #I will now use index again to find these players penalty goals
 penaltygoals= penalty_20.set_index('Penalty_Goals')
 penaltygoals=[9,7,8,6,4,3,4,4,3,3,3,4,2,3,3]
 print(penaltygoals)
+
 
 
 import numpy as np
@@ -135,8 +146,13 @@ np_conv= np.array(conversion)
 np_penprice= 1/np_conv
 print(np_penprice)
 
-plt.scatter(players_penalty_a, np_penprice)
+#I want to plot a lineplot now, as this is the best graph to show the difference between players odds
+#I initially used a scatterplot for this using plt.scatter, but a lineplot visualises this graph much better
+
+import matplotlib.pyplot as plt
+fig, ax=plt.subplots()
+plt.plot(players_penalty_a, np_penprice)
 plt.xlabel('Players')
-plt.ylabel('Price to score penalty')
-plt.title('Best Penalty Takers- Odds to score a penalty')
+plt.ylabel('Decimal price to score penalty')
+plt.title('Players Price to Score penalty')
 plt.show()
