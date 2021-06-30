@@ -94,7 +94,7 @@ plt.show()
 #Here, I will find all players who have taken over 2 penalties, and find their conversion rate
 #I will do this by creating lists for Penalty_Attempted and Penalty_Goals
 #First, I will find the top 15 players who have attempted penalties
-penalty_20=data.nlargest(15, 'Penalty_Attempted') [['Name', 'Penalty_Attempted', 'Penalty_Goals']]
+penalty_20=data.nlargest(15, 'Penalty_Attempted')
 
 #I will now use indexing to make sure I can see the relevant column for Penalty_Attempted
 penalty20=penalty_20.set_index('Penalty_Attempted')
@@ -107,11 +107,20 @@ pens_a= [10, 9, 9, 6, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3]
 penaltygoals= penalty_20.set_index('Penalty_Goals')
 penaltygoals=[9,7,8,6,4,3,4,4,3,3,3,4,2,3,3]
 print(penaltygoals)
-plt.bar(x=players_penalty_a, y=pens_a, penaltygoals]
-plt.xlabel('Players')
-plt.ylabel('Penalties Attempted/Scored')
-plt.title= ('Players to have taken most penalties 20/21')
-plt.show()
+
+
+import numpy as np
+import plotly.express as px
+
+
+DF_players_pens = data.nlargest(15, 'Penalty_Attempted')[['Name', 'Penalty_Goals', 'Penalty_Attempted']]
+fig = px.bar(DF_players_pens, x="Name", y=['Penalty_Goals', 'Penalty_Attempted'],
+             color_discrete_map={
+                 "Penalty_Attempted": "blue",
+                 "Penalty_Goals": "green"}
+             )
+fig.show()
+
 
 print('penaltygoals:' + str(penaltygoals))
 print('pens_a:' + str(pens_a))
@@ -121,6 +130,13 @@ print(conversion)
 #This will be printed in decimal form, simply by dividing 1 by their conversion rate
 #Example, Bruno Fernandes scored 9/10 penalties, a conversion rate of 0.9 or 90%
 #1/0.9 equals 1.11, which is a fraction price of 1/9
-#Using a for loop, See below all prices for relevant penalty takers, in list penprice
-penprice=[1/scored for scored in conversion]
-print(penprice)
+#Using a numpy array, See below all prices for relevant penalty takers, in list np_penprice
+np_conv= np.array(conversion)
+np_penprice= 1/np_conv
+print(np_penprice)
+
+plt.scatter(players_penalty_a, np_penprice)
+plt.xlabel('Players')
+plt.ylabel('Price to score penalty')
+plt.title('Best Penalty Takers- Odds to score a penalty')
+plt.show()
