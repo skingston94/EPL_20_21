@@ -20,14 +20,17 @@ import pandas as pd
 #Dataset found on Kaggle- https://www.kaggle.com/atasaygin/premier-league-player-analysis
 data= pd.read_csv('EPL_20_21.csv')
 #I have also downloaded a dataset with American players, and called it a_data below
-#I will merge the two datasets below
 a_data= pd.read_csv('all_players.csv')
+#Now I will print the shape of both datasets, to find the size of both
+#Results are below, (532, 18), (15767, 28)
 print(data.shape, a_data.shape)
+#I will merge the two datasets below using pd.concat. Merged data has 16,299 rows with 45 columns
 concat_data=pd.concat([data, a_data])
 print(concat_data)
 #I won't be using the American players in this project, but I wanted to show I know how to merge datasets
 
 #Cleaning the data below to remove all players who did not start or play any matches
+#Again, this will be done solely for the data dataset- EPL
 cleaned_data=data.drop_duplicates(subset=['Matches', 'Starts'])
 print(cleaned_data)
 
@@ -37,8 +40,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-#Example to look at data in first 7 rows- Test to make sure data is running correctly
-Top7 = pd.read_csv('EPL_20_21.csv', nrows=7, header=None)
+
 #Sorting players by total number of yellow cards
 print(data.sort_values(['Yellow_Cards', 'Name'], ascending=[False, False]))
 #After trial and error, I've sorted the top 7 players to get most yellow cards (anyone with 9+).
@@ -62,6 +64,10 @@ plt.title('Players to receive most Yellow Cards 20/21')
 plt.yticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
 #Graph appears with plt.show()
 plt.show()
+
+#This graph shows the top 7 players who received most yellows in the Premier league this season
+#Very valuable to collect this data to get an insight into which players are most likely to receive a yellow going forward
+#Using this graph, we can make the pricing of the market much quicker.
 
 
 #Now I want to find out what odds these 7 players should be for a yellow card in each match
@@ -99,6 +105,9 @@ plt.ylabel('Yellow Card Price')
 plt.title('Price per Player for Yellow Card- EPL 20/21')
 plt.show()
 
+#This graph gives a bookmaker a great insight into what price each of these players should be to receive a yellow
+#I was able to combine graph 1 with players minutes, to make pricing this market much quicker and more accuarte
+
 
 #Next, I want to look at the penalty takers from each team to find out what players are most likely to score from a penalty
 #Here, I will find all players who have taken over 2 penalties, and find their conversion rate
@@ -123,22 +132,32 @@ penaltygoals=[9,7,8,6,4,3,4,4,3,3,3,4,2,3,3]
 print(penaltygoals)
 
 
-
-import numpy as np
+#Importing Plotly.express now
 import plotly.express as px
 
-
+#I will now find the top 15 players to take penalties, along with the data for scoring those penalties
 DF_players_pens = data.nlargest(15, 'Penalty_Attempted')[['Name', 'Penalty_Goals', 'Penalty_Attempted']]
+#Plotting the graph now, using colours to differentiate between penalties attempted vs penalties scored
 fig = px.bar(DF_players_pens, x="Name", y=['Penalty_Goals', 'Penalty_Attempted'],
              color_discrete_map={
                  "Penalty_Attempted": "blue",
                  "Penalty_Goals": "green"}
              )
+#Below I will title the graph
+fig.update_layout(title_text='Top Penalty Takers- Conversion Rate')
+#fig.show() to show the graph
 fig.show()
 
+#This graph gives us three insights
+#1- What team receives the most penalty kicks
+#2- Who is most likely to take penalties for their team
+#3- How likely that player is to then score the penalty
 
+#Now, using truediv again, I will divide penaltygoals into penalties attempted
+#This will find each players percentage for conversion of penalties
 print('penaltygoals:' + str(penaltygoals))
 print('pens_a:' + str(pens_a))
+#Saving this as conversion, and printing
 conversion= list(map(truediv, penaltygoals, pens_a))
 print(conversion)
 #Now I will calculate each players price to score a penalty, based off their record this season
@@ -160,3 +179,6 @@ plt.xlabel('Players')
 plt.ylabel('Decimal price to score penalty')
 plt.title('Players Price to Score penalty')
 plt.show()
+
+#This final graph gives a bookmaker insight into what price the player is to score his penalty
+#This graph makes it much quicker for us to find the players conversion rate, and price the market quickly and efficiently.
